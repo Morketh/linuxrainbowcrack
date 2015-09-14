@@ -1,6 +1,11 @@
 
 all: rtgen rtdump rtsort rcrack rtstats hello
 
+all_clean: clean rtgen rtdump rtsort rcrack rtstats hello
+
+clean:
+	rm -f ../bin/*
+
 rtgen:
 	mpic++ Public.cpp ChainWalkContext.cpp HashAlgorithm.cpp HashRoutine.cpp RainbowTableGenerate.cpp -lcrypto -lpthread -lssl -O3 -o ../bin/rtgen
 	cp charset.txt ../bin/charset.txt
