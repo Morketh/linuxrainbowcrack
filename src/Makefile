@@ -1,8 +1,9 @@
 
-all: rtgen rtdump rtsort rcrack rtstats
+all: rtgen rtdump rtsort rcrack rtstats hello
 
 rtgen:
 	mpic++ Public.cpp ChainWalkContext.cpp HashAlgorithm.cpp HashRoutine.cpp RainbowTableGenerate.cpp -lcrypto -lpthread -lssl -O3 -o ../bin/rtgen
+	cp charset.txt ../bin/charset.txt
 
 rtdump:
 	g++ Public.cpp ChainWalkContext.cpp HashAlgorithm.cpp HashRoutine.cpp RainbowTableDump.cpp -lcrypto -lssl -o ../bin/rtdump
@@ -14,3 +15,5 @@ rcrack:
 	g++ Public.cpp ChainWalkContext.cpp HashAlgorithm.cpp -lcrypto HashRoutine.cpp HashSet.cpp MemoryPool.cpp ChainWalkSet.cpp CrackEngine.cpp RainbowCrack.cpp -lssl -O3 -o ../bin/rcrack
 rtstats:
 	g++ rtstats.cpp Public.cpp -o ../bin/rtstats
+hello:
+	mpic++ MPI_Hello.c -o ../bin/mpi_hello

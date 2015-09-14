@@ -202,8 +202,10 @@ void Logo()
 	printf("RainbowCrack 1.2 - Making a Faster Cryptanalytic Time-Memory Trade-Off\n");
 	printf("by Zhu Shuanglei <shuanglei@hotmail.com>\n");
 	printf("http://www.antsight.com/zsl/rainbowcrack/\n\n");
+	
 	printf("Modiffied by KALGECIN\n");
-	printf("kalgecin@gmail.com\n");
-	printf("MPI (Message Passing Interface) added by Andrew Malone\n")
-	printf("admmorketh@gmail.com\n\n")
+	printf("kalgecin@gmail.com\n\n");
+	
+	printf("MPI (Message Passing Interface) added by Andrew Malone\n");
+	printf("admmorketh@gmail.com\n\n");
 }
