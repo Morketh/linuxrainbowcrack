@@ -135,6 +135,7 @@ int main(int argc, char* argv[])
 		if (strcmp(argv[6], "-bench") == 0)
 		{
 			Bench(argv[1], argv[2], atoi(argv[3]), atoi(argv[4]), atoi(argv[5]));
+			MPI_Finalize();
 			return 0;
 		}
 	}
