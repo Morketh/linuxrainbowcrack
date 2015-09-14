@@ -18,6 +18,7 @@
 //detect multicore systems
 int numCPU = sysconf( _SC_NPROCESSORS_ONLN );
 #include "ChainWalkContext.h"
+#include "mpi.h"
 void* RunMulticore();
 FILE* file;
 CChainWalkContext cwc;
@@ -116,6 +117,19 @@ int main(int argc, char* argv[])
 	string sHashRoutineName,sCharsetName,sFileTitleSuffix;
 	int nPlainLenMin,nPlainLenMax,nRainbowTableIndex,nRainbowChainCount;
 	//printf("argc:%d\n",argc);
+
+	//Rocks Cluster Support
+	int nprocs, myrank, merror;
+	merror = MPI_Init(&argc,&argv);
+	if (merror != 0) {
+		printf("Error initializing MPI program. Terminating.\n");
+		MPI_Abort(MPI_COMM_WORLD,merror);
+	}
+	MPI_Comm_size(MPI_COMM_WORLD,&nprocs);
+	MPI_Comm_rank(MPI_COMM_WORLD,&myrank);
+	printf("Number of processors or tasks = %d My rank= %d\n", nprocs,myrank);
+	//End Cluster additions
+	
 	if (argc == 7)
 	{
 		if (strcmp(argv[6], "-bench") == 0)
@@ -303,6 +317,7 @@ int main(int argc, char* argv[])
 	}
 
 	// Close
+	MPI_Finalize();
 	fclose(file);
 
 	return 0;

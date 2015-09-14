@@ -2,15 +2,15 @@
 all: rtgen rtdump rtsort rcrack rtstats
 
 rtgen:
-	g++ Public.cpp ChainWalkContext.cpp HashAlgorithm.cpp HashRoutine.cpp RainbowTableGenerate.cpp -lcrypto -lpthread -lssl -O3 -o rtgen
+	mpic++ Public.cpp ChainWalkContext.cpp HashAlgorithm.cpp HashRoutine.cpp RainbowTableGenerate.cpp -lcrypto -lpthread -lssl -O3 -o ../bin/rtgen
 
 rtdump:
-	g++ Public.cpp ChainWalkContext.cpp HashAlgorithm.cpp HashRoutine.cpp RainbowTableDump.cpp -lcrypto -lssl -o rtdump
+	g++ Public.cpp ChainWalkContext.cpp HashAlgorithm.cpp HashRoutine.cpp RainbowTableDump.cpp -lcrypto -lssl -o ../bin/rtdump
 
 rtsort:
-	g++ Public.cpp RainbowTableSort.cpp -lcrypto -o rtsort
+	g++ Public.cpp RainbowTableSort.cpp -lcrypto -o ../bin/rtsort
 
 rcrack:
-	g++ Public.cpp ChainWalkContext.cpp HashAlgorithm.cpp -lcrypto HashRoutine.cpp HashSet.cpp MemoryPool.cpp ChainWalkSet.cpp CrackEngine.cpp RainbowCrack.cpp -lssl -O3 -o rcrack
+	g++ Public.cpp ChainWalkContext.cpp HashAlgorithm.cpp -lcrypto HashRoutine.cpp HashSet.cpp MemoryPool.cpp ChainWalkSet.cpp CrackEngine.cpp RainbowCrack.cpp -lssl -O3 -o ../bin/rcrack
 rtstats:
-	g++ rtstats.cpp Public.cpp -o rtstats
+	g++ rtstats.cpp Public.cpp -o ../bin/rtstats
