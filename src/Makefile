@@ -1,10 +1,13 @@
 
-all: rtgen rtdump rtsort rcrack rtstats hello
+all: bin rtgen rtdump rtsort rcrack rtstats hello
 
-all_clean: clean rtgen rtdump rtsort rcrack rtstats hello
+all_clean: clean bin rtgen rtdump rtsort rcrack rtstats hello
+
+bin:
+	mkdir ../bin	
 
 clean:
-	rm -f ../bin/*
+	rm -rf ../bin
 
 rtgen:
 	mpic++ Public.cpp ChainWalkContext.cpp HashAlgorithm.cpp HashRoutine.cpp RainbowTableGenerate.cpp -lcrypto -lpthread -lssl -O3 -o ../bin/rtgen
