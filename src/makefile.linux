@@ -2,7 +2,7 @@
 all: rtgen rtdump rtsort rcrack rtstats
 
 rtgen:
-	g++ Public.cpp ChainWalkContext.cpp HashAlgorithm.cpp HashRoutine.cpp RainbowTableGenerate.cpp -lcrypto -lpthread -lssl -O3 -o ../bin/rtgen
+	mpic++ Public.cpp ChainWalkContext.cpp HashAlgorithm.cpp HashRoutine.cpp RainbowTableGenerate.cpp -lcrypto -lpthread -lssl -O3 -o ../bin/rtgen
 
 rtdump:
 	g++ Public.cpp ChainWalkContext.cpp HashAlgorithm.cpp HashRoutine.cpp RainbowTableDump.cpp -lcrypto -lssl -o ../bin/rtdump
