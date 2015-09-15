@@ -58,7 +58,7 @@ void Usage()
 	printf("         rtgen lm alpha 1 7 0 -bench\n");
 }
 
-void Bench(string sHashRoutineName, string sCharsetName, int nPlainLenMin, int nPlainLenMax, int nRainbowTableIndex)
+void Bench(string sHashRoutineName, string sCharsetName, int nPlainLenMin, int nPlainLenMax, int nRainbowTableIndex, int id)
 {
 	// Setup CChainWalkContext
 	if (!CChainWalkContext::SetHashRoutine(sHashRoutineName))
@@ -88,7 +88,7 @@ void Bench(string sHashRoutineName, string sCharsetName, int nPlainLenMin, int n
 	clock_t t2 = clock();
 	float fTime = 1.0f * (t2 - t1) / CLOCKS_PER_SEC;
 
-	printf("%s hash speed: %d / s\n", sHashRoutineName.c_str(), int(nLoop / fTime));
+	printf("Process: %d reports: %s hash speed: %d / s\n", id, sHashRoutineName.c_str(), int(nLoop / fTime));
 	}
 
 	// Bench step
@@ -108,7 +108,7 @@ void Bench(string sHashRoutineName, string sCharsetName, int nPlainLenMin, int n
 	clock_t t2 = clock();
 	float fTime = 1.0f * (t2 - t1) / CLOCKS_PER_SEC;
 
-	printf("%s step speed: %d / s\n", sHashRoutineName.c_str(), int(nLoop / fTime));
+	printf("Process: %d reports: %s step speed: %d / s\n", id, sHashRoutineName.c_str(), int(nLoop / fTime));
 	}
 }
 
@@ -134,7 +134,7 @@ int main(int argc, char* argv[])
 	{
 		if (strcmp(argv[6], "-bench") == 0)
 		{
-			Bench(argv[1], argv[2], atoi(argv[3]), atoi(argv[4]), atoi(argv[5]));
+			Bench(argv[1], argv[2], atoi(argv[3]), atoi(argv[4]), atoi(argv[5]), myrank);
 			MPI_Finalize();
 			return 0;
 		}
