@@ -8,7 +8,10 @@
 #include <unistd.h>
 #include <string.h>
 #include <openssl/des.h>
+
 #include <openssl/md5.h>
+#include <openssl/md2.h>
+
 #include <openssl/sha.h>
 #ifdef _WIN32
 	#pragma comment(lib, "libeay32.lib")
@@ -64,6 +67,11 @@ void HashLM(unsigned char* pPlain, int nPlainLen, unsigned char* pHash)
 void HashMD5(unsigned char* pPlain, int nPlainLen, unsigned char* pHash)
 {
 	MD5(pPlain, nPlainLen, pHash);
+}
+
+void HashMD2(unsigned char* pPlain, int nPlainLen, unsigned char* pHash)
+{
+	MD2(pPlain, nPlainLen, pHash);
 }
 
 void HashSHA1(unsigned char* pPlain, int nPlainLen, unsigned char* pHash)

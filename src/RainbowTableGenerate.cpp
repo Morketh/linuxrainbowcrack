@@ -54,12 +54,14 @@ void Usage()
 	printf("file_title_suffix:    the string appended to the file title\n");
 	printf("                      add your comment of the generated rainbow table here\n");
 	printf("-bench:               do some benchmark\n");
+	printf("-bench-csv:           do some benchmark save output in CSV (usefull for graph data)\n");
 
 	printf("\n");
 	printf("example: rtgen lm alpha 1 7 0 100 16 test\n");
 	printf("         rtgen md5 byte 4 4 0 100 16 test\n");
 	printf("         rtgen sha1 numeric 1 10 0 100 16 test\n");
 	printf("         rtgen lm alpha 1 7 0 -bench\n");
+	printf("         rtgen lm alpha 1 7 0 -bench-csv\n");
 }
 
 void Bench(string sHashRoutineName, string sCharsetName, int nPlainLenMin, int nPlainLenMax, int nRainbowTableIndex, int id, int tpids)
@@ -120,6 +122,69 @@ void Bench(string sHashRoutineName, string sCharsetName, int nPlainLenMin, int n
 	}
 }
 
+void BenchCSV(string sHashRoutineName, string sCharsetName, int nPlainLenMin, int nPlainLenMax, int nRainbowTableIndex, int id, int tpids)
+{
+	// Setup CChainWalkContext
+	if (!CChainWalkContext::SetHashRoutine(sHashRoutineName))
+	{
+		printf("hash routine %s not supported\n", sHashRoutineName.c_str());
+		return;
+	}
+	if (!CChainWalkContext::SetPlainCharset(sCharsetName, nPlainLenMin, nPlainLenMax))
+		return;
+	if (!CChainWalkContext::SetRainbowTableIndex(nRainbowTableIndex))
+	{
+		printf("invalid rainbow table index %d\n", nRainbowTableIndex);
+		return;
+	}
+
+	// Bench hash
+	{
+	CChainWalkContext cwc;
+	cwc.GenerateRandomIndex();
+	cwc.IndexToPlain();
+
+	clock_t t1 = clock();
+	int nLoop = 2500000;
+	int i;
+	for (i = 0; i < nLoop; i++)
+		cwc.PlainToHash();
+	clock_t t2 = clock();
+	float fTime = 1.0f * (t2 - t1) / CLOCKS_PER_SEC;
+
+	/*
+	I think this area here might be the easest to work with in order to migrate over to an MPI compatible environment
+	as this only calculates hash speeds im sure we can increase that by paralizing the hashing algorithm
+	*/
+	if (id == 0)
+		printf("id of total on name,hash_type,function,speed\n");
+	printf("%d of %d on %s,%s,hash,%d\n", id, tpids, GetNodeName(), sHashRoutineName.c_str(), int(nLoop / fTime));
+	}
+
+	// Bench step
+	{
+	CChainWalkContext cwc;
+	cwc.GenerateRandomIndex();
+
+	clock_t t1 = clock();
+	int nLoop = 2500000;
+	int i;
+	for (i = 0; i < nLoop; i++)
+	{
+		cwc.IndexToPlain();
+		cwc.PlainToHash();
+		cwc.HashToIndex(i);
+	}
+	clock_t t2 = clock();
+	float fTime = 1.0f * (t2 - t1) / CLOCKS_PER_SEC;
+	
+	// printf("id,total,name,hash_type,function,speed\n");
+	printf("%d of %d on %s,%s,step,%d\n", id, tpids, GetNodeName(), sHashRoutineName.c_str(), int(nLoop / fTime));
+	}
+}
+
+
+
 int main(int argc, char* argv[])
 {
 	string sHashRoutineName,sCharsetName,sFileTitleSuffix;
@@ -143,6 +208,12 @@ int main(int argc, char* argv[])
 		if (strcmp(argv[6], "-bench") == 0)
 		{
 			Bench(argv[1], argv[2], atoi(argv[3]), atoi(argv[4]), atoi(argv[5]), myid, nprocs);
+			MPI_Finalize();
+			return 0;
+		}
+		else if (strcmp(argv[6], "-bench-csv") == 0)
+		{
+			BenchCSV(argv[1], argv[2], atoi(argv[3]), atoi(argv[4]), atoi(argv[5]), myid, nprocs);
 			MPI_Finalize();
 			return 0;
 		}
