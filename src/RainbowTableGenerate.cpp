@@ -15,8 +15,12 @@
 #endif
 #include <time.h>
 #include <pthread.h>
-//detect multicore systems
-int numCPU = sysconf( _SC_NPROCESSORS_ONLN );
+/*
+detect multicore systems
+Im fairly sure this is obsolete with the MPI additions
+MPI uses nprocs and myid for task identification
+*/
+// int numCPU = sysconf( _SC_NPROCESSORS_ONLN );
 #include "ChainWalkContext.h"
 #include "mpi.h"
 void* RunMulticore();
@@ -26,7 +30,7 @@ int nRainbowChainLen;
 void Usage()
 {
 	Logo();
-	printf("Number of cores: %d\n",numCPU);
+	// printf("Number of cores: %d\n",numCPU);
 	printf("usage: rtgen hash_algorithm \\\n");
 	printf("             plain_charset plain_len_min plain_len_max \\\n");
 	printf("             rainbow_table_index \\\n");
@@ -58,7 +62,7 @@ void Usage()
 	printf("         rtgen lm alpha 1 7 0 -bench\n");
 }
 
-void Bench(string sHashRoutineName, string sCharsetName, int nPlainLenMin, int nPlainLenMax, int nRainbowTableIndex, int id)
+void Bench(string sHashRoutineName, string sCharsetName, int nPlainLenMin, int nPlainLenMax, int nRainbowTableIndex, int id, int tpids)
 {
 	// Setup CChainWalkContext
 	if (!CChainWalkContext::SetHashRoutine(sHashRoutineName))
@@ -88,7 +92,11 @@ void Bench(string sHashRoutineName, string sCharsetName, int nPlainLenMin, int n
 	clock_t t2 = clock();
 	float fTime = 1.0f * (t2 - t1) / CLOCKS_PER_SEC;
 
-	printf("Process: %d reports: %s hash speed: %d / s\n", id, sHashRoutineName.c_str(), int(nLoop / fTime));
+	/*
+	I think this area here might be the easest to work with in order to migrate over to an MPI compatible environment
+	as this only calculates hash speeds im sure we can increase that by paralizing the hashing algorithm
+	*/
+	printf("Process: %d of %d on node %s reports: %s hash speed: %d / s\n", id, tpids, GetNodeName(), sHashRoutineName.c_str(), int(nLoop / fTime));
 	}
 
 	// Bench step
@@ -108,7 +116,7 @@ void Bench(string sHashRoutineName, string sCharsetName, int nPlainLenMin, int n
 	clock_t t2 = clock();
 	float fTime = 1.0f * (t2 - t1) / CLOCKS_PER_SEC;
 
-	printf("Process: %d reports: %s step speed: %d / s\n", id, sHashRoutineName.c_str(), int(nLoop / fTime));
+	printf("Process: %d of %d on node %s reports: %s step speed: %d / s\n", id, tpids, GetNodeName(), sHashRoutineName.c_str(), int(nLoop / fTime));
 	}
 }
 
@@ -119,22 +127,22 @@ int main(int argc, char* argv[])
 	//printf("argc:%d\n",argc);
 
 	//Rocks Cluster Support
-	int nprocs, myrank, merror;
+	int nprocs, myid, merror;
 	merror = MPI_Init(&argc,&argv);
 	if (merror != 0) {
 		printf("Error initializing MPI program. Terminating.\n");
 		MPI_Abort(MPI_COMM_WORLD,merror);
 	}
 	MPI_Comm_size(MPI_COMM_WORLD,&nprocs);
-	MPI_Comm_rank(MPI_COMM_WORLD,&myrank);
-	printf("Number of processors or tasks = %d My rank= %d\n", nprocs,myrank);
+	MPI_Comm_rank(MPI_COMM_WORLD,&myid);
+	//printf("Number of processors or tasks = %d My rank= %d\n", nprocs,myid);
 	//End Cluster additions
 	
 	if (argc == 7)
 	{
 		if (strcmp(argv[6], "-bench") == 0)
 		{
-			Bench(argv[1], argv[2], atoi(argv[3]), atoi(argv[4]), atoi(argv[5]), myrank);
+			Bench(argv[1], argv[2], atoi(argv[3]), atoi(argv[4]), atoi(argv[5]), myid, nprocs);
 			MPI_Finalize();
 			return 0;
 		}
@@ -323,6 +331,13 @@ int main(int argc, char* argv[])
 
 	return 0;
 }
+
+/*
+Can we make this MPI compatible?
+seems to me its just writing the same chain data from each process called
+makes the files a mess
+*/
+
 void* RunMulticore(){
 	cwc.GenerateRandomIndex();
 	uint64 nIndex = cwc.GetIndex();							// get index

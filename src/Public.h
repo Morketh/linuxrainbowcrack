@@ -14,6 +14,11 @@
 #include <list>
 #include <cstring>
 #include <stdlib.h>
+
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
 using namespace std;
 
 #ifdef _WIN32
@@ -43,5 +48,7 @@ unsigned int GetAvailPhysMemorySize();
 void ParseHash(string sHash, unsigned char* pHash, int& nHashLen);
 
 void Logo();
+
+char* GetNodeName();
 
 #endif
