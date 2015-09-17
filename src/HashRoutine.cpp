@@ -19,6 +19,7 @@ CHashRoutine::CHashRoutine()
 
 	AddHashRoutine("lm",	HashLM,		8);
 	AddHashRoutine("md5",	HashMD5,	16);
+	AddHashRoutine("md4",	HashMD4,	16);
 	AddHashRoutine("md2",	HashMD2,	16);
 	AddHashRoutine("sha1",	HashSHA1,	20);
 	AddHashRoutine("crypt", HashCrypt,	13);

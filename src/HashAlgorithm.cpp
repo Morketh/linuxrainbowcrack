@@ -11,6 +11,7 @@
 
 #include <openssl/md5.h>
 #include <openssl/md2.h>
+#include <openssl/md4.h>
 
 #include <openssl/sha.h>
 #ifdef _WIN32
@@ -72,6 +73,11 @@ void HashMD5(unsigned char* pPlain, int nPlainLen, unsigned char* pHash)
 void HashMD2(unsigned char* pPlain, int nPlainLen, unsigned char* pHash)
 {
 	MD2(pPlain, nPlainLen, pHash);
+}
+
+void HashMD4(unsigned char* pPlain, int nPlainLen, unsigned char* pHash)
+{
+	MD4(pPlain, nPlainLen, pHash);
 }
 
 void HashSHA1(unsigned char* pPlain, int nPlainLen, unsigned char* pHash)
