@@ -1,1 +1,5 @@
 language: cpp
+
+script:
+  - cd src
+  - make -j4
