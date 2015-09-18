@@ -27,10 +27,11 @@ void* RunMulticore();
 FILE* file;
 CChainWalkContext cwc;
 int nRainbowChainLen;
+
 void Usage()
 {
 	Logo();
-	printf("Total Tasks = %d My TaskID = %d\n", nprocs,myid);
+	// printf("Total Tasks = %d My TaskID = %d\n", nprocs,myid);
 	printf("usage: rtgen hash_algorithm \\\n");
 	printf("             plain_charset plain_len_min plain_len_max \\\n");
 	printf("             rainbow_table_index \\\n");
