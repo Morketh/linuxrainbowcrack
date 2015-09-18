@@ -30,7 +30,7 @@ int nRainbowChainLen;
 void Usage()
 {
 	Logo();
-	// printf("Number of cores: %d\n",numCPU);
+	printf("Total Tasks = %d My TaskID = %d\n", nprocs,myid);
 	printf("usage: rtgen hash_algorithm \\\n");
 	printf("             plain_charset plain_len_min plain_len_max \\\n");
 	printf("             rainbow_table_index \\\n");
@@ -221,7 +221,8 @@ int main(int argc, char* argv[])
 
 	if (argc != 9 && argc != 2)
 	{
-		Usage();
+		if (myid == 0)
+			Usage();
 		return 0;
 	}
 	pthread_t thread1, thread2, thread3, thread4;
