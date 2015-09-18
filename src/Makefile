@@ -22,4 +22,5 @@ pi:
 install:
 	yes | cp -fR ../bin /export/home/admiral/
 	yes | cp -fR ../tests /export/home/admiral/
+	yes | cp BenchMark.sh /export/home/admiral/bin/benchmark
 	chown admiral:admiral -R /export/home/admiral
