@@ -196,6 +196,7 @@ bool LMPasswordCorrectCase(string sLMPassword,
 
 void Usage()
 {
+	rcrack_logo();
 	Logo();
 
 	printf("usage: rcrack rainbow_table_pathname -h hash\n");
