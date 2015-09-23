@@ -199,16 +199,47 @@ void ParseHash(string sHash, unsigned char* pHash, int& nHashLen)
 
 void Logo()
 {
+	CI_Logo();
+	
 	printf("RainbowCrack 1.2 - Making a Faster Cryptanalytic Time-Memory Trade-Off\n");
 	printf("by Zhu Shuanglei <shuanglei@hotmail.com>\n");
 	printf("http://www.antsight.com/zsl/rainbowcrack/\n\n");
 	
 	printf("Modiffied by KALGECIN\n");
 	printf("kalgecin@gmail.com\n\n");
-	
-	printf("MPI (Message Passing Interface) added by Andrew Malone\n");
-	printf("admmorketh@gmail.com\n\n");
 }
+
+/*
+* NAME: CI_Logo()
+* PURPOSE: Prints out CI Logo
+* RETURNS: N/A
+* PROVIDED BY: Andrew Malone
+* DATE: 9/23/2015
+*/
+
+void CI_Logo()
+{
+	printf("\033[0;32m"); // Print out GREEN text
+	printf(" CCCCC       IIIIIIIII\n");
+	printf("CCC CCC         III\n");
+	printf("CCC CCC         III\n");
+	printf("CCC             III\n");
+	printf("CCC     ====    III\n");
+	printf("CCC     ====    III\n");
+	printf("CCC             III\n");
+	printf("CCC CCC         III\n");
+	printf("CCC CCC         III\n"); //underline the Web Address
+	printf(" CCCCC       IIIIIIIII   \033[4;33mhttp://ci-main.no-ip.org/\n"); 
+	printf("\033[0m\n")
+}
+
+/*
+* NAME: GetNodeName()
+* PURPOSE: Grabs DNS Names for the computational node
+* RETURNS: char* (string)
+* PROVIDED BY: Andrew Malone
+* DATE: 9/23/2015
+*/
 
 char* GetNodeName()
 {

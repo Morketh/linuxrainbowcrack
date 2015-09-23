@@ -19,9 +19,8 @@ hello:
 	mpic++ Public.cpp MPI_Hello.cpp -o ../bin/mpi_hello
 pi:
 	mpic++ dboard.c pi.cpp -lm -o ../bin/pi
-	
-server:
-	g++ Public.cpp ChainWalkContext.cpp HashAlgorithm.cpp HashRoutine.cpp server.cpp
+
+# TODO: fix this section so we can use PATH variables (not eveery one has this setup)
 install:
 	yes | cp -fR ../bin /export/home/admiral/
 	yes | cp -fR ../tests /export/home/admiral/
