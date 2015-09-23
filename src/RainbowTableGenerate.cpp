@@ -30,6 +30,7 @@ int nRainbowChainLen;
 
 void Usage()
 {
+	rtgen_logo();
 	Logo();
 	// printf("Total Tasks = %d My TaskID = %d\n", nprocs,myid);
 	printf("usage: rtgen hash_algorithm \\\n");

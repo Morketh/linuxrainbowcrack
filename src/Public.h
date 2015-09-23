@@ -49,6 +49,7 @@ void ParseHash(string sHash, unsigned char* pHash, int& nHashLen);
 
 void Logo();
 void CI_Logo();
+void rtgen_logo();
 
 char* GetNodeName();
 
