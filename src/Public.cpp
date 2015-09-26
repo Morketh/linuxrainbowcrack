@@ -235,6 +235,7 @@ void CI_Logo()
 
 /*
 * NAME: GetNodeName()
+* C++ implimentation MPI has its own call
 * PURPOSE: Grabs DNS Names for the computational node
 * RETURNS: char* (string)
 * PROVIDED BY: Andrew Malone

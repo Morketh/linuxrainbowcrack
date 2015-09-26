@@ -126,6 +126,8 @@ void Bench(string sHashRoutineName, string sCharsetName, int nPlainLenMin, int n
 
 void BenchCSV(string sHashRoutineName, string sCharsetName, int nPlainLenMin, int nPlainLenMax, int nRainbowTableIndex, int id, int tpids)
 {
+	int len;
+	char hostname[MPI_MAX_PROCESSOR_NAME];
 	// Setup CChainWalkContext
 	if (!CChainWalkContext::SetHashRoutine(sHashRoutineName))
 	{
@@ -160,7 +162,8 @@ void BenchCSV(string sHashRoutineName, string sCharsetName, int nPlainLenMin, in
 	*/
 	if (id == 0)
 		printf("id of total on name,hash_type,function,speed\n");
-	printf("%d of %d on %s,%s,hash,%d\n", id, tpids, GetNodeName(), sHashRoutineName.c_str(), int(nLoop / fTime));
+	MPI_Get_processor_name(hostname, &len);
+	printf("%d of %d on %s,%s,hash,%d\n", id, tpids, hostname, sHashRoutineName.c_str(), int(nLoop / fTime));
 	}
 
 	// Bench step
@@ -181,7 +184,8 @@ void BenchCSV(string sHashRoutineName, string sCharsetName, int nPlainLenMin, in
 	float fTime = 1.0f * (t2 - t1) / CLOCKS_PER_SEC;
 	
 	// printf("id,total,name,hash_type,function,speed\n");
-	printf("%d of %d on %s,%s,step,%d\n", id, tpids, GetNodeName(), sHashRoutineName.c_str(), int(nLoop / fTime));
+	MPI_Get_processor_name(hostname, &len);
+	printf("%d of %d on %s,%s,step,%d\n", id, tpids, hostname, sHashRoutineName.c_str(), int(nLoop / fTime));
 	}
 }
 
@@ -195,6 +199,7 @@ int main(int argc, char* argv[])
 
 	//Rocks Cluster Support
 	int nprocs, myid, merror;
+	
 	merror = MPI_Init(&argc,&argv);
 	if (merror != 0) {
 		printf("Error initializing MPI program. Terminating.\n");
@@ -227,8 +232,7 @@ int main(int argc, char* argv[])
 			Usage();
 		return 0;
 	}
-	pthread_t thread1, thread2, thread3, thread4;
-	int iret1,iret2,iret3,iret4;
+	
 	char * pch;
 	if(argc==2){
 		pch = strtok (argv[1],"_");
@@ -306,7 +310,7 @@ int main(int argc, char* argv[])
 	nice(1);
 #endif
 
-	// FileName
+	// FileName (we need to add a node exstention here)
 	char szFileName[256];
 	sprintf(szFileName, "%s_%s#%d-%d_%d_%dx%d_%s.rt", sHashRoutineName.c_str(),
 													  sCharsetName.c_str(),
@@ -326,7 +330,7 @@ int main(int argc, char* argv[])
 		return 0;
 	}
 
-	// Check existing chains
+	// Check existing chains (per file in a parellel program)
 	unsigned int nDataLen = GetFileLen(file);
 	nDataLen = nDataLen / 16 * 16;					//??????????? Don't get it either
 	if (nDataLen == nRainbowChainCount * 16)
@@ -407,9 +411,33 @@ int main(int argc, char* argv[])
 }
 
 /*
-Can we make this MPI compatible?
-seems to me its just writing the same chain data from each process called
-makes the files a mess
+* Can we make this MPI compatible?
+* seems to me its just writing the same chain data from each process called
+* makes the files a mess
+
+
+Psuedo Code:
+
+nTasks = number of tasks
+nChainspTasks = nRainbowChainCount / nTasks
+
+myTaskID = get task ID
+
+for (nPos = MyTaskID * nChainspTasks; nPos < ((MyTaskID * nChainspTasks) + nChainspTasks) - 1; nPos++)
+	Generate Tables
+	Write data to NODE_File
+
+* end prog *
+
+Seprate Program run before sort
+--------------------------------
+reformat data from split file into single file
+Section-01 ------|
+                 \/
+Section-02----> RTFile
+                 /\
+Section-03-------|
+
 */
 
 void* RunMulticore(){
