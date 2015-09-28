@@ -55,6 +55,8 @@ int QuickSortPartition(RainbowChain* pChain, int nLow, int nHigh)
 	return nLow;
 }
 
+
+// is this multi threaded? and should it be?
 void QuickSort(RainbowChain* pChain, int nLow, int nHigh)
 {
 	if (nLow < nHigh)
