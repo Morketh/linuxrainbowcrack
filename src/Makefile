@@ -1,6 +1,7 @@
-all: bin rtgen rtdump rtsort rcrack rtstats hello pi
-all_clean: clean bin rtgen rtdump rtsort rcrack rtstats hello pi
-bin:
+all: pre-build rtgen rtdump rtsort rcrack rtstats hello pi
+all_clean: clean pre-build rtgen rtdump rtsort rcrack rtstats hello pi
+
+pre-build:
 	mkdir ../bin	
 clean:
 	rm -rf ../bin
